@@ -1,0 +1,99 @@
+<!--
+  SaveRecord - cria UMA Ordem de Compra de teste (1.1.04) na BASE DE TESTE.
+  POST {{rm_url}}/wsDataServer/IwsDataServer
+  Headers:
+    Content-Type: text/xml; charset=utf-8
+    SOAPAction: "http://www.totvs.com/IwsDataServer/SaveRecord"
+    Authorization: Basic (usuario:senha do RM de TESTE)
+
+  Retorno esperado em sucesso: "1;<IDMOV>"  (coligada;idmov da OC criada)
+  Em erro: texto da excecao do RM (geralmente diz o campo/regra que falhou).
+
+  ATENCAO:
+  - Os valores abaixo foram copiados de uma OC real da base Teste_BrasiliaSeg (IDMOV 211266).
+    Valor reduzido para R$ 10,00 de proposito.
+  - Formato decimal: usar o MESMO formato que o ReadRecord (arquivo 01) devolver.
+    Confirmado no ReadRecord de 08/10/2026: o RM devolve PONTO (10.0000).
+  - IDMOV = -1 e NUMEROMOV = -1 => o RM gera id e numero automaticamente.
+  - IDINTEGRACAO = chave unica da SoftExpert (anti-duplicidade). Troque a cada teste.
+-->
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tot="http://www.totvs.com/">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <tot:SaveRecord>
+      <tot:DataServerName>MovMovimentoTBCData</tot:DataServerName>
+      <tot:XML><![CDATA[
+<MovMovimento>
+  <TMOV>
+    <CODCOLIGADA>1</CODCOLIGADA>
+    <IDMOV>-1</IDMOV>
+    <CODFILIAL>1</CODFILIAL>
+    <CODLOC>01</CODLOC>
+    <CODCFO>878300</CODCFO>
+    <CODCOLCFO>1</CODCOLCFO>
+    <NUMEROMOV>-1</NUMEROMOV>
+    <SERIE>OR</SERIE>
+    <CODTMV>1.1.04</CODTMV>
+    <TIPO>A</TIPO>
+    <STATUS>A</STATUS>
+    <DATAEMISSAO>2026-10-08T00:00:00</DATAEMISSAO>
+    <DATAEXTRA1>2026-10-15T00:00:00</DATAEXTRA1>
+    <CODCPG>03</CODCPG>
+    <CODCCUSTO>52.2123</CODCCUSTO>
+    <CODDEPARTAMENTO>0.04.03.06</CODDEPARTAMENTO>
+    <CODTB1FLX>0410</CODTB1FLX>
+    <CODTB2FLX>0001</CODTB2FLX>
+    <CODVEN1>55554</CODVEN1>
+    <CODVEN2>06318</CODVEN2>
+    <FRETECIFOUFOB>1</FRETECIFOUFOB>
+    <CODMOEVALORLIQUIDO>R$</CODMOEVALORLIQUIDO>
+    <CAMPOLIVRE1>CAESB - Veículos - Peças e Manutenção</CAMPOLIVRE1>
+    <SEGUNDONUMERO>SE-TESTE-0001</SEGUNDONUMERO>
+    <IDINTEGRACAO>SOFTEXPERT-TESTE-0001</IDINTEGRACAO>
+    <VALORBRUTO>10.0000</VALORBRUTO>
+    <VALORLIQUIDO>10.0000</VALORLIQUIDO>
+    <VALOROUTROS>10.0000</VALOROUTROS>
+    <HISTORICOCURTO>TESTE DE INTEGRACAO SOFTEXPERT - NAO PROCESSAR.
+Local de entrega: SIA Trecho 06, Bloco A, Lote 05/15.</HISTORICOCURTO>
+  </TMOV>
+
+  <TMOVRATCCU>
+    <CODCOLIGADA>1</CODCOLIGADA>
+    <IDMOV>-1</IDMOV>
+    <IDMOVRATCCU>-1</IDMOVRATCCU>
+    <CODCCUSTO>52.2123</CODCCUSTO>
+    <VALOR>10.0000</VALOR>
+  </TMOVRATCCU>
+
+  <TITMMOV>
+    <CODCOLIGADA>1</CODCOLIGADA>
+    <IDMOV>-1</IDMOV>
+    <NSEQITMMOV>1</NSEQITMMOV>
+    <NUMEROSEQUENCIAL>1</NUMEROSEQUENCIAL>
+    <CODFILIAL>1</CODFILIAL>
+    <IDPRD>19966</IDPRD>
+    <QUANTIDADE>1.0000</QUANTIDADE>
+    <PRECOUNITARIO>10.0000</PRECOUNITARIO>
+    <CODUND>TB200</CODUND>
+    <CODLOC>01</CODLOC>
+    <CODCCUSTO>52.2123</CODCCUSTO>
+    <CODDEPARTAMENTO>0.04.03.06</CODDEPARTAMENTO>
+    <CODTB1FLX>0410</CODTB1FLX>
+    <CODTB2FLX>0001</CODTB2FLX>
+    <CAMPOLIVRE>TESTE</CAMPOLIVRE>
+  </TITMMOV>
+
+  <TITMMOVRATCCU>
+    <CODCOLIGADA>1</CODCOLIGADA>
+    <IDMOV>-1</IDMOV>
+    <NSEQITMMOV>1</NSEQITMMOV>
+    <IDMOVRATCCU>-1</IDMOVRATCCU>
+    <CODCCUSTO>52.2123</CODCCUSTO>
+    <VALOR>10.0000</VALOR>
+  </TITMMOVRATCCU>
+</MovMovimento>
+]]></tot:XML>
+      <tot:Contexto>CODCOLIGADA=1;CODFILIAL=1;CODSISTEMA=T;CODUSUARIO=SEU_USUARIO_RM</tot:Contexto>
+    </tot:SaveRecord>
+  </soapenv:Body>
+</soapenv:Envelope>

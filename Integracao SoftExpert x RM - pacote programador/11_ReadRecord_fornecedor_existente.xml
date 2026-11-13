@@ -1,0 +1,28 @@
+<!--
+  PASSO 1 - Ler um fornecedor que JA EXISTE, para ver o XML "oficial" do FinCFODataBR nesta versao do RM
+  (nomes das tags, quais tabelas vem juntas: FCFO, FCFOCOMPL, contatos, dados de pagamento).
+
+  POST {{rm_url}}/wsDataServer/IwsDataServer
+  Headers:
+    Content-Type: text/xml; charset=utf-8
+    SOAPAction: "http://www.totvs.com/IwsDataServer/ReadRecord"
+    Authorization: Basic (usuario:senha do RM de TESTE)
+
+  PrimaryKey = CODCOLIGADA;CODCFO
+  009586 = fornecedor PJ do DF criado em 14/10/2026 por Compras (somente fornecedor, PAGREC 2).
+  Se nao existir na base de teste (copia antiga), use outro codigo recente:
+  SELECT TOP 5 FCFO.CODCFO FROM FCFO WHERE FCFO.CODCOLIGADA = 1 ORDER BY FCFO.IDCFO DESC
+
+  ATENCAO decimal: o ReadRecord pode devolver separador decimal DIFERENTE do que o SaveRecord espera
+  (aviso oficial da TOTVS). Nao copie o formato de numero daqui - ver LEIA-ME.
+-->
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tot="http://www.totvs.com/">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <tot:ReadRecord>
+      <tot:DataServerName>FinCFODataBR</tot:DataServerName>
+      <tot:PrimaryKey>1;009586</tot:PrimaryKey>
+      <tot:Contexto>CODCOLIGADA=1;CODSISTEMA=F;CODUSUARIO=SEU_USUARIO_RM</tot:Contexto>
+    </tot:ReadRecord>
+  </soapenv:Body>
+</soapenv:Envelope>

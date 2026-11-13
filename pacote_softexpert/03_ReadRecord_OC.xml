@@ -1,0 +1,25 @@
+<!--
+  PASSO 3 de 3 - Ler a OC criada para obter o NUMEROMOV (numero da OC que aparece no RM).
+
+  POST {{rm_url}}/wsDataServer/IwsDataServer
+  Headers:
+    Content-Type: text/xml; charset=utf-8
+    SOAPAction: "http://www.totvs.com/IwsDataServer/ReadRecord"
+    Authorization: Basic base64({{rm_user}}:{{rm_pass}})
+
+  {{IDMOV}} = numero que veio no retorno do SaveRecord ("1;<IDMOV>").
+
+  Na resposta, gravar no processo:
+    <IDMOV>      -> campo "ID do movimento no RM"
+    <NUMEROMOV>  -> campo "No da OC no RM" (ex.: 048020)
+-->
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tot="http://www.totvs.com/">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <tot:ReadRecord>
+      <tot:DataServerName>MovMovimentoTBCData</tot:DataServerName>
+      <tot:PrimaryKey>1;{{IDMOV}}</tot:PrimaryKey>
+      <tot:Contexto>CODCOLIGADA=1;CODFILIAL=1;CODSISTEMA=T;CODUSUARIO={{rm_user}}</tot:Contexto>
+    </tot:ReadRecord>
+  </soapenv:Body>
+</soapenv:Envelope>

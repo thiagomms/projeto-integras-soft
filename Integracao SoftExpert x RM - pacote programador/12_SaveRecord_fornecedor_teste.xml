@@ -1,0 +1,84 @@
+<!--
+  SaveRecord - cria UM fornecedor de teste na BASE DE TESTE (DataServer FinCFODataBR).
+  Modelo oficial da TOTVS: TDN "Inclusao de Cliente/Fornecedor" (pageId 450153132).
+  Valores-padrao copiados dos fornecedores criados por Compras em 2025-2026 (coligada 1).
+
+  POST {{rm_url}}/wsDataServer/IwsDataServer
+  Headers:
+    Content-Type: text/xml; charset=utf-8
+    SOAPAction: "http://www.totvs.com/IwsDataServer/SaveRecord"
+    Authorization: Basic (usuario:senha do RM de TESTE)
+
+  Retorno esperado em sucesso: "1;<CODCFO>"
+
+  PONTOS A CONFIRMAR NO 1o TESTE:
+  - CODCFO: os codigos novos sao sequenciais com 6 digitos (009577 ... 009587 em out/2026).
+    Tentativa 1: enviar -1 para o RM numerar. Se der erro, perguntar a TI se a numeracao
+    automatica de Cli/For esta ligada; senao, enviar o proximo codigo livre.
+  - Dados FICTICIOS: troque CNPJ/nome antes de enviar. Use um CNPJ de teste valido
+    (o RM costuma validar o digito verificador).
+  - PAGREC 3 (cliente e fornecedor) = o que Compras usa em 84% dos cadastros novos; 2 = so fornecedor.
+  - Nao ha campo decimal neste XML, entao a questao virgula/ponto nao se aplica aqui.
+-->
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tot="http://www.totvs.com/">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <tot:SaveRecord>
+      <tot:DataServerName>FinCFODataBR</tot:DataServerName>
+      <tot:XML><![CDATA[
+<FinCFOBR>
+  <FCFO>
+    <CODCOLIGADA>1</CODCOLIGADA>
+    <CODCFO>-1</CODCFO>
+    <NOMEFANTASIA>FORNECEDOR TESTE INTEGRACAO SOFTEXPERT</NOMEFANTASIA>
+    <NOME>FORNECEDOR TESTE INTEGRACAO SOFTEXPERT LTDA</NOME>
+    <CGCCFO>00.000.000/0000-00</CGCCFO>
+    <INSCRESTADUAL>ISENTO</INSCRESTADUAL>
+    <PAGREC>3</PAGREC>
+    <PESSOAFISOUJUR>J</PESSOAFISOUJUR>
+    <TIPORUA>47</TIPORUA>
+    <RUA>SIA TRECHO 06 BLOCO A</RUA>
+    <NUMERO>05</NUMERO>
+    <COMPLEMENTO>LOTE 05/15</COMPLEMENTO>
+    <TIPOBAIRRO>1</TIPOBAIRRO>
+    <BAIRRO>ZONA INDUSTRIAL</BAIRRO>
+    <CIDADE>Brasilia</CIDADE>
+    <CODETD>DF</CODETD>
+    <CODMUNICIPIO>00108</CODMUNICIPIO>
+    <CEP>71205-060</CEP>
+    <IDPAIS>1</IDPAIS>
+    <TELEFONE>(61)0000-0000</TELEFONE>
+    <EMAIL>teste@exemplo.com.br</EMAIL>
+    <CONTATO>TESTE</CONTATO>
+    <CODCOLTCF>1</CODCOLTCF>
+    <CODTCF>109</CODTCF>
+    <ATIVO>1</ATIVO>
+    <CONTRIBUINTE>0</CONTRIBUINTE>
+    <CODRECEITA>1708</CODRECEITA>
+    <REGIMEISS>N</REGIMEISS>
+    <CONTRIBUINTEISS>0</CONTRIBUINTEISS>
+    <RETENCAOISS>0</RETENCAOISS>
+    <OPTANTEPELOSIMPLES>0</OPTANTEPELOSIMPLES>
+    <ORGAOPUBLICO>0</ORGAOPUBLICO>
+    <PORTE>0</PORTE>
+    <RAMOATIV>0</RAMOATIV>
+    <NACIONALIDADE>0</NACIONALIDADE>
+    <TIPOCONTRIBUINTEINSS>0</TIPOCONTRIBUINTEINSS>
+    <CALCULAAVP>0</CALCULAAVP>
+    <ENTIDADEEXECUTORAPAA>0</ENTIDADEEXECUTORAPAA>
+    <APOSENTADOOUPENSIONISTA>0</APOSENTADOOUPENSIONISTA>
+    <SOCIOCOOPERADO>0</SOCIOCOOPERADO>
+    <CONTRIBUINTE_IBS_CBS>0</CONTRIBUINTE_IBS_CBS>
+    <IDINTEGRACAO>SOFTEXPERT-FORN-TESTE-0001</IDINTEGRACAO>
+  </FCFO>
+  <FCFOCOMPL>
+    <CODCOLIGADA>1</CODCOLIGADA>
+    <CODCFO>-1</CODCFO>
+    <NIVELFORN>Nível C</NIVELFORN>
+  </FCFOCOMPL>
+</FinCFOBR>
+]]></tot:XML>
+      <tot:Contexto>CODCOLIGADA=1;CODSISTEMA=F;CODUSUARIO=SEU_USUARIO_RM</tot:Contexto>
+    </tot:SaveRecord>
+  </soapenv:Body>
+</soapenv:Envelope>

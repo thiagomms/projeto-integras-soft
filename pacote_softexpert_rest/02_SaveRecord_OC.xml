@@ -1,0 +1,136 @@
+<!--
+  PASSO 2 de 3 - Criar a Ordem de Compra (tipo 1.1.04) no RM.
+  So chamar depois da aprovacao final e se o passo 1 nao encontrou a OC.
+
+  POST {{rm_url}}/wsDataServer/IwsDataServer
+  Headers:
+    Content-Type: text/xml; charset=utf-8
+    SOAPAction: "http://www.totvs.com/IwsDataServer/SaveRecord"
+    Authorization: Basic base64({{rm_user}}:{{rm_pass}})
+
+  Retorno:
+    - sucesso: "1;<IDMOV>"  -> seguir para o passo 3 com o IDMOV.
+    - erro:    texto da excecao do RM -> gravar em "Mensagem de erro do RM", situacao = Erro.
+
+  FORMATOS
+    - Decimal com PONTO e 4 casas: 1560.5000 (nunca virgula, nunca separador de milhar).
+    - Data: AAAA-MM-DDT00:00:00
+    - Valores fixos (sem {{ }}) nao mudam.
+    - IDMOV, NUMEROMOV e IDMOVRATCCU = -1: o RM gera.
+    - Texto livre: escapar & < > (dentro do CDATA, so evitar a sequencia "]]>").
+
+  BLOCOS QUE SE REPETEM
+    - <TMOVRATCCU>     1 por centro de custo do rateio do cabecalho.
+                       Soma de VALOR = VALORLIQUIDO.
+    - <TITMMOV>        1 por item. NSEQITMMOV e NUMEROSEQUENCIAL = 1, 2, 3...
+    - <TITMMOVRATCCU>  1 por centro de custo de cada item, com o NSEQITMMOV do item.
+                       Soma de VALOR = QUANTIDADE x PRECOUNITARIO do item.
+    Rateio por percentual: arredondar em 2 casas e jogar a diferenca de centavos na ultima linha.
+    Com um so centro de custo: uma linha com 100% no centro de custo principal.
+
+  DE-PARA  (campo do formulario -> marcador)
+    Fornecedor ......................... {{CODCFO}}, {{CODCOLCFO}}       lista 1
+    Condicao de pagamento .............. {{CODCPG}}                       lista 4
+    Centro de custo principal .......... {{CODCCUSTO}}                    lista 3
+      (nome do centro de custo) ........ {{NOME_CCUSTO}}
+    Departamento ....................... {{CODDEPARTAMENTO}}              lista 7
+    Natureza da despesa ................ {{CODTB1FLX}}                    lista 5
+    Tipo de custo ...................... {{CODTB2FLX}}                    lista 6
+    Comprador .......................... {{CODVEN1}}                      lista 8
+    Responsavel / requisitante ......... {{CODVEN2}}                      lista 9
+    Tipo de frete ...................... {{FRETECIFOUFOB}}                lista fixa (1, 2, 9)
+    Previsao de entrega (opcional) ..... {{DATA_PREVISAO_ENTREGA}}        se vazio, remover a tag DATAEXTRA1
+    No da solicitacao .................. {{NUMERO_SOLICITACAO}}           ate 20 caracteres
+    Justificativa / Local de entrega ... {{JUSTIFICATIVA}}, {{LOCAL_ENTREGA}}
+    Identificador do processo .......... {{IDINTEGRACAO}}                 ate 100, unico, o mesmo do passo 1
+    Data da aprovacao final ............ {{DATA_APROVACAO}}
+    Soma dos itens ..................... {{VALOR_TOTAL}}
+    Item: Produto ...................... {{IDPRD}}                        lista 2
+    Item: Unidade de compra ............ {{CODUNDCOMPRA}}                 lista 2 (vem com o produto)
+    Item: Quantidade / Preco unitario .. {{QUANTIDADE}}, {{PRECOUNITARIO}}
+    Item: Centro de custo .............. {{CODCCUSTO_ITEM}}               lista 3
+    Item: Placa / observacao ........... {{PLACA_OBS}}                    ate 15, opcional
+-->
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tot="http://www.totvs.com/">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <tot:SaveRecord>
+      <tot:DataServerName>MovMovimentoTBCData</tot:DataServerName>
+      <tot:XML><![CDATA[
+<MovMovimento>
+  <TMOV>
+    <CODCOLIGADA>1</CODCOLIGADA>
+    <IDMOV>-1</IDMOV>
+    <CODFILIAL>1</CODFILIAL>
+    <CODLOC>01</CODLOC>
+    <CODCFO>{{CODCFO}}</CODCFO>
+    <CODCOLCFO>{{CODCOLCFO}}</CODCOLCFO>
+    <NUMEROMOV>-1</NUMEROMOV>
+    <SERIE>OR</SERIE>
+    <CODTMV>1.1.04</CODTMV>
+    <TIPO>A</TIPO>
+    <STATUS>A</STATUS>
+    <DATAEMISSAO>{{DATA_APROVACAO}}T00:00:00</DATAEMISSAO>
+    <DATAEXTRA1>{{DATA_PREVISAO_ENTREGA}}T00:00:00</DATAEXTRA1>
+    <CODCPG>{{CODCPG}}</CODCPG>
+    <CODCCUSTO>{{CODCCUSTO}}</CODCCUSTO>
+    <CODDEPARTAMENTO>{{CODDEPARTAMENTO}}</CODDEPARTAMENTO>
+    <CODTB1FLX>{{CODTB1FLX}}</CODTB1FLX>
+    <CODTB2FLX>{{CODTB2FLX}}</CODTB2FLX>
+    <CODVEN1>{{CODVEN1}}</CODVEN1>
+    <CODVEN2>{{CODVEN2}}</CODVEN2>
+    <FRETECIFOUFOB>{{FRETECIFOUFOB}}</FRETECIFOUFOB>
+    <CODMOEVALORLIQUIDO>R$</CODMOEVALORLIQUIDO>
+    <CAMPOLIVRE1>{{NOME_CCUSTO}}</CAMPOLIVRE1>
+    <SEGUNDONUMERO>{{NUMERO_SOLICITACAO}}</SEGUNDONUMERO>
+    <IDINTEGRACAO>{{IDINTEGRACAO}}</IDINTEGRACAO>
+    <VALORBRUTO>{{VALOR_TOTAL}}</VALORBRUTO>
+    <VALORLIQUIDO>{{VALOR_TOTAL}}</VALORLIQUIDO>
+    <VALOROUTROS>{{VALOR_TOTAL}}</VALOROUTROS>
+    <HISTORICOCURTO>#{{NUMERO_SOLICITACAO}} - {{JUSTIFICATIVA}}
+Local de entrega: {{LOCAL_ENTREGA}}</HISTORICOCURTO>
+  </TMOV>
+
+  <!-- Rateio do cabecalho: repetir por centro de custo -->
+  <TMOVRATCCU>
+    <CODCOLIGADA>1</CODCOLIGADA>
+    <IDMOV>-1</IDMOV>
+    <IDMOVRATCCU>-1</IDMOVRATCCU>
+    <CODCCUSTO>{{CODCCUSTO_RATEIO}}</CODCCUSTO>
+    <VALOR>{{VALOR_RATEIO}}</VALOR>
+  </TMOVRATCCU>
+
+  <!-- Item: repetir por item (NSEQITMMOV = NUMEROSEQUENCIAL = 1, 2, 3...) -->
+  <TITMMOV>
+    <CODCOLIGADA>1</CODCOLIGADA>
+    <IDMOV>-1</IDMOV>
+    <NSEQITMMOV>{{N_ITEM}}</NSEQITMMOV>
+    <NUMEROSEQUENCIAL>{{N_ITEM}}</NUMEROSEQUENCIAL>
+    <CODFILIAL>1</CODFILIAL>
+    <IDPRD>{{IDPRD}}</IDPRD>
+    <QUANTIDADE>{{QUANTIDADE}}</QUANTIDADE>
+    <PRECOUNITARIO>{{PRECOUNITARIO}}</PRECOUNITARIO>
+    <CODUND>{{CODUNDCOMPRA}}</CODUND>
+    <CODLOC>01</CODLOC>
+    <CODCCUSTO>{{CODCCUSTO_ITEM}}</CODCCUSTO>
+    <CODDEPARTAMENTO>{{CODDEPARTAMENTO}}</CODDEPARTAMENTO>
+    <CODTB1FLX>{{CODTB1FLX}}</CODTB1FLX>
+    <CODTB2FLX>{{CODTB2FLX}}</CODTB2FLX>
+    <CAMPOLIVRE>{{PLACA_OBS}}</CAMPOLIVRE>
+  </TITMMOV>
+
+  <!-- Rateio do item: repetir por centro de custo de cada item -->
+  <TITMMOVRATCCU>
+    <CODCOLIGADA>1</CODCOLIGADA>
+    <IDMOV>-1</IDMOV>
+    <NSEQITMMOV>{{N_ITEM}}</NSEQITMMOV>
+    <IDMOVRATCCU>-1</IDMOVRATCCU>
+    <CODCCUSTO>{{CODCCUSTO_RATEIO_ITEM}}</CODCCUSTO>
+    <VALOR>{{VALOR_RATEIO_ITEM}}</VALOR>
+  </TITMMOVRATCCU>
+</MovMovimento>
+]]></tot:XML>
+      <tot:Contexto>CODCOLIGADA=1;CODFILIAL=1;CODSISTEMA=T;CODUSUARIO={{rm_user}}</tot:Contexto>
+    </tot:SaveRecord>
+  </soapenv:Body>
+</soapenv:Envelope>

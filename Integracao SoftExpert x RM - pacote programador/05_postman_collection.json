@@ -1,0 +1,201 @@
+{
+  "info": {
+    "name": "RM - Integracao SoftExpert (TESTE)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Base Teste_BrasiliaSeg. Preencha rm_url com o RM.Host que aponta para a base de TESTE."
+  },
+  "variable": [
+    {
+      "key": "rm_url",
+      "value": "http://SERVIDOR-RM-TESTE:8051"
+    },
+    {
+      "key": "rm_user",
+      "value": "integracao.softexpert"
+    },
+    {
+      "key": "rm_pass",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Ordem de Compra",
+      "item": [
+        {
+          "name": "01 ReadRecord - OC existente 211266",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{rm_user}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{rm_pass}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.totvs.com/IwsDataServer/ReadRecord\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tot=\"http://www.totvs.com/\">\n  <soapenv:Header/>\n  <soapenv:Body>\n    <tot:ReadRecord>\n      <tot:DataServerName>MovMovimentoTBCData</tot:DataServerName>\n      <tot:PrimaryKey>1;211266</tot:PrimaryKey>\n      <tot:Contexto>CODCOLIGADA=1;CODFILIAL=1;CODSISTEMA=T;CODUSUARIO={{rm_user}}</tot:Contexto>\n    </tot:ReadRecord>\n  </soapenv:Body>\n</soapenv:Envelope>\n",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": "{{rm_url}}/wsDataServer/IwsDataServer",
+            "description": "Le uma OC real (nao copie o formato decimal daqui)."
+          }
+        },
+        {
+          "name": "02 SaveRecord - criar OC de teste",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{rm_user}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{rm_pass}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.totvs.com/IwsDataServer/SaveRecord\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tot=\"http://www.totvs.com/\">\n  <soapenv:Header/>\n  <soapenv:Body>\n    <tot:SaveRecord>\n      <tot:DataServerName>MovMovimentoTBCData</tot:DataServerName>\n      <tot:XML><![CDATA[\n<MovMovimento>\n  <TMOV>\n    <CODCOLIGADA>1</CODCOLIGADA>\n    <IDMOV>-1</IDMOV>\n    <CODFILIAL>1</CODFILIAL>\n    <CODLOC>01</CODLOC>\n    <CODCFO>878300</CODCFO>\n    <CODCOLCFO>1</CODCOLCFO>\n    <NUMEROMOV>-1</NUMEROMOV>\n    <SERIE>OR</SERIE>\n    <CODTMV>1.1.04</CODTMV>\n    <TIPO>A</TIPO>\n    <STATUS>A</STATUS>\n    <DATAEMISSAO>2026-10-08T00:00:00</DATAEMISSAO>\n    <DATAEXTRA1>2026-10-15T00:00:00</DATAEXTRA1>\n    <CODCPG>03</CODCPG>\n    <CODCCUSTO>52.2123</CODCCUSTO>\n    <CODDEPARTAMENTO>0.04.03.06</CODDEPARTAMENTO>\n    <CODTB1FLX>0410</CODTB1FLX>\n    <CODTB2FLX>0001</CODTB2FLX>\n    <CODVEN1>55554</CODVEN1>\n    <CODVEN2>06318</CODVEN2>\n    <FRETECIFOUFOB>1</FRETECIFOUFOB>\n    <CODMOEVALORLIQUIDO>R$</CODMOEVALORLIQUIDO>\n    <CAMPOLIVRE1>CAESB - Veículos - Peças e Manutenção</CAMPOLIVRE1>\n    <SEGUNDONUMERO>SE-TESTE-0001</SEGUNDONUMERO>\n    <IDINTEGRACAO>SOFTEXPERT-TESTE-0001</IDINTEGRACAO>\n    <VALORBRUTO>10,0000</VALORBRUTO>\n    <VALORLIQUIDO>10,0000</VALORLIQUIDO>\n    <VALOROUTROS>10,0000</VALOROUTROS>\n  </TMOV>\n\n  <TMOVHISTORICO>\n    <CODCOLIGADA>1</CODCOLIGADA>\n    <IDMOV>-1</IDMOV>\n    <HISTORICOLONGO>TESTE DE INTEGRACAO SOFTEXPERT - NAO PROCESSAR.\nLocal de entrega: SIA Trecho 06, Bloco A, Lote 05/15.</HISTORICOLONGO>\n  </TMOVHISTORICO>\n\n  <TMOVRATCCU>\n    <CODCOLIGADA>1</CODCOLIGADA>\n    <IDMOV>-1</IDMOV>\n    <IDMOVRATCCU>-1</IDMOVRATCCU>\n    <CODCCUSTO>52.2123</CODCCUSTO>\n    <VALOR>10,0000</VALOR>\n  </TMOVRATCCU>\n\n  <TITMMOV>\n    <CODCOLIGADA>1</CODCOLIGADA>\n    <IDMOV>-1</IDMOV>\n    <NSEQITMMOV>1</NSEQITMMOV>\n    <NUMEROSEQUENCIAL>1</NUMEROSEQUENCIAL>\n    <CODFILIAL>1</CODFILIAL>\n    <IDPRD>19966</IDPRD>\n    <QUANTIDADE>1,0000</QUANTIDADE>\n    <PRECOUNITARIO>10,0000</PRECOUNITARIO>\n    <CODUND>TB200</CODUND>\n    <CODLOC>01</CODLOC>\n    <CODCCUSTO>52.2123</CODCCUSTO>\n    <CODDEPARTAMENTO>0.04.03.06</CODDEPARTAMENTO>\n    <CODTB1FLX>0410</CODTB1FLX>\n    <CODTB2FLX>0001</CODTB2FLX>\n    <CAMPOLIVRE>TESTE</CAMPOLIVRE>\n  </TITMMOV>\n\n  <TITMMOVRATCCU>\n    <CODCOLIGADA>1</CODCOLIGADA>\n    <IDMOV>-1</IDMOV>\n    <NSEQITMMOV>1</NSEQITMMOV>\n    <IDMOVRATCCU>-1</IDMOVRATCCU>\n    <CODCCUSTO>52.2123</CODCCUSTO>\n    <VALOR>10,0000</VALOR>\n  </TITMMOVRATCCU>\n</MovMovimento>\n]]></tot:XML>\n      <tot:Contexto>CODCOLIGADA=1;CODFILIAL=1;CODSISTEMA=T;CODUSUARIO={{rm_user}}</tot:Contexto>\n    </tot:SaveRecord>\n  </soapenv:Body>\n</soapenv:Envelope>\n",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": "{{rm_url}}/wsDataServer/IwsDataServer",
+            "description": "Cria a OC. Retorno '1;IDMOV'. Troque IDINTEGRACAO a cada envio."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fornecedor",
+      "item": [
+        {
+          "name": "11 ReadRecord - fornecedor 009586",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{rm_user}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{rm_pass}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.totvs.com/IwsDataServer/ReadRecord\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tot=\"http://www.totvs.com/\">\n  <soapenv:Header/>\n  <soapenv:Body>\n    <tot:ReadRecord>\n      <tot:DataServerName>FinCFODataBR</tot:DataServerName>\n      <tot:PrimaryKey>1;009586</tot:PrimaryKey>\n      <tot:Contexto>CODCOLIGADA=1;CODSISTEMA=F;CODUSUARIO={{rm_user}}</tot:Contexto>\n    </tot:ReadRecord>\n  </soapenv:Body>\n</soapenv:Envelope>\n",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": "{{rm_url}}/wsDataServer/IwsDataServer",
+            "description": "Le um fornecedor real."
+          }
+        },
+        {
+          "name": "12 SaveRecord - criar fornecedor de teste",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{rm_user}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{rm_pass}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.totvs.com/IwsDataServer/SaveRecord\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tot=\"http://www.totvs.com/\">\n  <soapenv:Header/>\n  <soapenv:Body>\n    <tot:SaveRecord>\n      <tot:DataServerName>FinCFODataBR</tot:DataServerName>\n      <tot:XML><![CDATA[\n<FinCFOBR>\n  <FCFO>\n    <CODCOLIGADA>1</CODCOLIGADA>\n    <CODCFO>-1</CODCFO>\n    <NOMEFANTASIA>FORNECEDOR TESTE INTEGRACAO SOFTEXPERT</NOMEFANTASIA>\n    <NOME>FORNECEDOR TESTE INTEGRACAO SOFTEXPERT LTDA</NOME>\n    <CGCCFO>00.000.000/0000-00</CGCCFO>\n    <INSCRESTADUAL>ISENTO</INSCRESTADUAL>\n    <PAGREC>3</PAGREC>\n    <PESSOAFISOUJUR>J</PESSOAFISOUJUR>\n    <TIPORUA>47</TIPORUA>\n    <RUA>SIA TRECHO 06 BLOCO A</RUA>\n    <NUMERO>05</NUMERO>\n    <COMPLEMENTO>LOTE 05/15</COMPLEMENTO>\n    <TIPOBAIRRO>1</TIPOBAIRRO>\n    <BAIRRO>ZONA INDUSTRIAL</BAIRRO>\n    <CIDADE>Brasilia</CIDADE>\n    <CODETD>DF</CODETD>\n    <CODMUNICIPIO>00108</CODMUNICIPIO>\n    <CEP>71205-060</CEP>\n    <IDPAIS>1</IDPAIS>\n    <TELEFONE>(61)0000-0000</TELEFONE>\n    <EMAIL>teste@exemplo.com.br</EMAIL>\n    <CONTATO>TESTE</CONTATO>\n    <CODCOLTCF>1</CODCOLTCF>\n    <CODTCF>109</CODTCF>\n    <ATIVO>1</ATIVO>\n    <CONTRIBUINTE>0</CONTRIBUINTE>\n    <CODRECEITA>1708</CODRECEITA>\n    <REGIMEISS>N</REGIMEISS>\n    <CONTRIBUINTEISS>0</CONTRIBUINTEISS>\n    <RETENCAOISS>0</RETENCAOISS>\n    <OPTANTEPELOSIMPLES>0</OPTANTEPELOSIMPLES>\n    <ORGAOPUBLICO>0</ORGAOPUBLICO>\n    <PORTE>0</PORTE>\n    <RAMOATIV>0</RAMOATIV>\n    <NACIONALIDADE>0</NACIONALIDADE>\n    <TIPOCONTRIBUINTEINSS>0</TIPOCONTRIBUINTEINSS>\n    <CALCULAAVP>0</CALCULAAVP>\n    <ENTIDADEEXECUTORAPAA>0</ENTIDADEEXECUTORAPAA>\n    <APOSENTADOOUPENSIONISTA>0</APOSENTADOOUPENSIONISTA>\n    <SOCIOCOOPERADO>0</SOCIOCOOPERADO>\n    <CONTRIBUINTE_IBS_CBS>0</CONTRIBUINTE_IBS_CBS>\n    <IDINTEGRACAO>SOFTEXPERT-FORN-TESTE-0001</IDINTEGRACAO>\n  </FCFO>\n  <FCFOCOMPL>\n    <CODCOLIGADA>1</CODCOLIGADA>\n    <CODCFO>-1</CODCFO>\n    <NIVELFORN>Nível C</NIVELFORN>\n  </FCFOCOMPL>\n</FinCFOBR>\n]]></tot:XML>\n      <tot:Contexto>CODCOLIGADA=1;CODSISTEMA=F;CODUSUARIO={{rm_user}}</tot:Contexto>\n    </tot:SaveRecord>\n  </soapenv:Body>\n</soapenv:Envelope>\n",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": "{{rm_url}}/wsDataServer/IwsDataServer",
+            "description": "Cria o fornecedor. Retorno '1;CODCFO'. Troque CNPJ/nome e IDINTEGRACAO."
+          }
+        }
+      ]
+    }
+  ]
+}

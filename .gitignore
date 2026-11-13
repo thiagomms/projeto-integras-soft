@@ -1,0 +1,9 @@
+# Credenciais (nunca versionar)
+.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+!.env.example
